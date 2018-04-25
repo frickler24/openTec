@@ -1,0 +1,78 @@
+# Folie 20
+ls -l 
+cd $HOME ; ls ; pwd
+cd /tmp ; ls ; pwd
+cd ~
+
+clear
+who
+whoami
+last
+df -H
+df -H .
+man ls
+
+cd ~/ziai12
+ls -l
+geany alleKommandos.txt &     # Wenn es nicht schon offen ist :-)
+
+sudo apt install -y nginx
+chromium-browser http://localhost &
+sudo geany /var/www/html/index.nginx-debian.html &
+
+sudo apt update
+sudo apt install -y docker-ce
+# Achtung, auch hier erst mal die Installation abwarten!
+
+sudo usermod -aG docker pi
+
+sudo docker run armhf/hello-world
+
+docker run -it arm32v6/alpine /bin/sh
+
+################################################################
+# Ein paar Kommandos für den Shell im eben erzeugten Container:
+ps alx
+whoami
+hostname
+uname -a
+df -h .
+################################################################
+
+
+docker ps
+docker ps --help
+
+
+docker ps -a
+
+docker stats                                # im neuen Fenster
+
+docker images
+docker image ls
+
+
+cd ~/ziai12/arm
+geany hello.c Dockerfile &
+make
+ls -l
+docker build -t mein-erstes-image .
+docker run mein-erstes-image
+
+cd ~/ziai12/nginx1
+geany Dockerfile.fromAlpineLocalNGINX &
+docker build -t myng -f Dockerfile.fromAlpineLocalNGINX .
+docker images
+
+docker run -d --name webserver -p 8080:80 myng
+chromium-browser http://localhost:8080/test.html 2>/dev/null &
+docker ps
+docker logs webserver
+docker stats
+docker rm -f webserver
+
+for i in {0..9} ; do docker run -d --name webs$i -p 808$i:80 myng ; done
+for i in {0..9} ; do curl -s http://localhost:808$i/mandel.php -o /dev/null & done      # oder mit mehr Flackern das nächste Statement
+for i in {0..9} ; do chromium-browser "http://localhost:808$i/brot.php?f=1&x=-0.58935546875&y=0.55902777777778&dx=0.005859375&dy=0.0078125&i=200&refresh=n&nw=192&submit=Submit" 2>/dev/null & done
+for i in {0..9} ; do docker stop webs$i ; done
+
